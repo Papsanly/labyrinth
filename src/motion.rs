@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-const MAX_SPEED: f32 = 1.0;
+const MAX_SPEED: f32 = 4.0;
 const FRICTION: f32 = 0.9;
 
 #[derive(Component, Default, Debug)]
@@ -31,7 +31,11 @@ fn movement(mut query: Query<(&mut Transform, &mut Velocity, &Acceleration)>, ti
         if velocity.0.length() > MAX_SPEED {
             velocity.0 = velocity.0.normalize() * MAX_SPEED;
         } else {
-            velocity.0 += (acceleration.0 - initial_velocity * FRICTION) * dt;
+            velocity.0 += acceleration.0 * dt;
+        }
+
+        if acceleration.0.length() == 0.0 {
+            velocity.0 -= initial_velocity * FRICTION * dt;
         }
 
         transform.translation += velocity.0 * dt;

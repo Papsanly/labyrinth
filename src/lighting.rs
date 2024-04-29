@@ -17,7 +17,7 @@ fn spawn(mut commands: Commands) {
         PointLightBundle {
             point_light: PointLight {
                 shadows_enabled: true,
-                intensity: 1_000_000.0,
+                intensity: 5_000_000.0,
                 ..default()
             },
             transform: Transform::from_xyz(3.0, 3.0, 0.0).looking_at(Vec3::ZERO, Vec3::Y),

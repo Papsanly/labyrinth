@@ -18,7 +18,7 @@ fn spawn_plane(
 ) {
     commands.spawn((
         PbrBundle {
-            mesh: meshes.add(Plane3d::default().mesh().size(10.0, 10.0)),
+            mesh: meshes.add(Plane3d::default().mesh().size(50.0, 50.0)),
             material: materials.add(StandardMaterial::default()),
             ..default()
         },
