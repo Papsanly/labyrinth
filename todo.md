@@ -3,18 +3,16 @@
 Systems:
 
 - [ ] generate
-- [ ] render
 
 # Ball Plugin
 
 Systems:
 
-- [ ] input
+- [x] input
 - [ ] physics
-  - [ ] friction
-  - [ ] max speed
+  - [x] friction
+  - [x] max speed
   - [ ] bounce of walls
-- [ ] render
 
 # Camera Plugin
 
@@ -26,11 +24,7 @@ Systems:
 
 # Toon Shader Plugin
 
-- [ ] render
-
 # UI Plugin
-
-- [ ] render
 
 # Game States
 

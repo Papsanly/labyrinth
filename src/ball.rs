@@ -1,4 +1,4 @@
-use crate::motion::{Acceleration, MotionBundle, Velocity};
+use crate::motion::{Acceleration, MotionBundle};
 use bevy::prelude::*;
 
 const MASS: f32 = 1.0;
@@ -10,8 +10,7 @@ pub struct Ball;
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn)
-            .add_systems(Update, keyboard_movement)
-            .add_systems(Update, debug_movement);
+            .add_systems(Update, keyboard_motion);
     }
 }
 
@@ -35,12 +34,7 @@ fn spawn(
     ));
 }
 
-fn debug_movement(query: Query<(&Acceleration, &Velocity), With<Ball>>) {
-    let (acceleration, velocity) = query.single();
-    info!("acceleration: {}, velocity: {}", acceleration.0, velocity.0);
-}
-
-fn keyboard_movement(
+fn keyboard_motion(
     mut query: Query<&mut Acceleration, With<Ball>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
