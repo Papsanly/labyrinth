@@ -46,7 +46,7 @@ fn keyboard_movement(
 ) {
     use KeyCode::{KeyA, KeyD, KeyS, KeyW};
 
-    let acceleration = &mut query.single_mut().0;
+    let acceleration = &mut query.single_mut();
 
     if input.all_pressed([KeyW, KeyD]) {
         acceleration.z = -1.0 / (MASS * 2.0f32.sqrt());
