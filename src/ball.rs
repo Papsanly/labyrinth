@@ -1,6 +1,7 @@
 use crate::motion::{Acceleration, MotionBundle};
 use bevy::prelude::*;
 use bevy_third_person_camera::ThirdPersonCameraTarget;
+use std::f32::consts::{FRAC_PI_2, SQRT_2};
 
 const ACCELERATION: f32 = 2.0;
 
@@ -37,38 +38,48 @@ fn spawn(
 }
 
 fn keyboard_motion(
-    mut query: Query<&mut Acceleration, With<Ball>>,
+    mut acceleration_query: Query<&mut Acceleration, With<Ball>>,
+    camera_transform_query: Query<&Transform, With<Camera3d>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
     use KeyCode::{KeyA, KeyD, KeyS, KeyW};
 
-    let acceleration = &mut query.single_mut();
+    let mut acceleration = acceleration_query.single_mut();
+    let &Transform {
+        rotation: camera_rotation,
+        ..
+    } = camera_transform_query.single();
+
+    let camera_direction = camera_rotation * Vec3::NEG_Z;
+    let camera_direction = Vec3::new(camera_direction.x, 0.0, camera_direction.z).normalize();
+    let forward = camera_direction * ACCELERATION;
+    let left = Quat::from_rotation_y(FRAC_PI_2) * forward * ACCELERATION;
 
     if input.all_pressed([KeyW, KeyD]) {
-        acceleration.z = -ACCELERATION / 2.0f32.sqrt();
-        acceleration.x = ACCELERATION / 2.0f32.sqrt();
+        **acceleration = (forward - left) / SQRT_2;
     } else if input.all_pressed([KeyW, KeyA]) {
-        acceleration.z = -ACCELERATION / 2.0f32.sqrt();
-        acceleration.x = -ACCELERATION / 2.0f32.sqrt();
+        **acceleration = (forward + left) / SQRT_2;
     } else if input.all_pressed([KeyS, KeyD]) {
-        acceleration.z = ACCELERATION / 2.0f32.sqrt();
-        acceleration.x = ACCELERATION / 2.0f32.sqrt();
+        **acceleration = (-forward - left) / SQRT_2;
     } else if input.all_pressed([KeyS, KeyA]) {
-        acceleration.z = ACCELERATION / 2.0f32.sqrt();
-        acceleration.x = -ACCELERATION / 2.0f32.sqrt();
+        **acceleration = (-forward + left) / SQRT_2;
     } else if input.pressed(KeyW) {
-        acceleration.z = -ACCELERATION;
+        **acceleration = forward;
     } else if input.pressed(KeyS) {
-        acceleration.z = ACCELERATION;
+        **acceleration = -forward;
     } else if input.pressed(KeyD) {
-        acceleration.x = ACCELERATION;
+        **acceleration = -left;
     } else if input.pressed(KeyA) {
-        acceleration.x = -ACCELERATION;
+        **acceleration = left;
     }
 
-    if input.any_just_released([KeyW, KeyS]) {
-        acceleration.z = 0.0;
-    } else if input.any_just_released([KeyD, KeyA]) {
-        acceleration.x = 0.0;
+    if input.just_released(KeyW) {
+        **acceleration -= forward;
+    } else if input.just_released(KeyS) {
+        **acceleration += forward;
+    } else if input.just_released(KeyD) {
+        **acceleration += left;
+    } else if input.just_released(KeyA) {
+        **acceleration -= left;
     }
 }
