@@ -1,8 +1,23 @@
 use bevy::prelude::*;
 use std::f32::consts::{FRAC_PI_2, SQRT_2};
 
-const FRICTION: f32 = 0.5;
-const MASS: f32 = 0.5;
+#[derive(Component, Debug, Deref, DerefMut)]
+pub struct Mass(pub f32);
+
+impl Default for Mass {
+    fn default() -> Self {
+        Self(1.0)
+    }
+}
+
+#[derive(Component, Debug, Deref, DerefMut)]
+pub struct Friction(pub f32);
+
+impl Default for Friction {
+    fn default() -> Self {
+        Self(1.0)
+    }
+}
 
 #[derive(Component, Default, Debug, Deref, DerefMut)]
 pub struct Velocity(pub Vec3);
@@ -17,6 +32,8 @@ pub struct KeyboardMotion;
 pub struct MotionBundle {
     velocity: Velocity,
     force: Force,
+    mass: Mass,
+    friction: Friction,
 }
 
 pub struct MotionPlugin;
@@ -27,11 +44,14 @@ impl Plugin for MotionPlugin {
     }
 }
 
-fn update_motion(mut query: Query<(&mut Transform, &mut Velocity, &Force)>, time: Res<Time>) {
-    for (mut transform, mut velocity, force) in &mut query {
+fn update_motion(
+    mut query: Query<(&mut Transform, &mut Velocity, &Force, &Mass, &Friction)>,
+    time: Res<Time>,
+) {
+    for (mut transform, mut velocity, force, mass, friction) in &mut query {
         let dt = time.delta_seconds();
         let v = **velocity;
-        **velocity += (**force - FRICTION * v) / MASS * dt;
+        **velocity += (**force - **friction * v) / **mass * dt;
         transform.translation += v * dt;
     }
 }
