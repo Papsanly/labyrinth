@@ -3,9 +3,6 @@ use std::f32::consts::FRAC_PI_2;
 
 pub struct LightingPlugin;
 
-#[derive(Component)]
-pub struct Light;
-
 impl Plugin for LightingPlugin {
     fn build(&self, app: &mut App) {
         let sky_color = Color::hex("#9bc4eb").unwrap();
@@ -20,21 +17,18 @@ impl Plugin for LightingPlugin {
 }
 
 fn spawn(mut commands: Commands) {
-    commands.spawn((
-        DirectionalLightBundle {
-            directional_light: DirectionalLight {
-                shadows_enabled: true,
-                illuminance: 10000.0,
-                ..default()
-            },
-            transform: Transform::from_rotation(Quat::from_euler(
-                EulerRot::XYZ,
-                -FRAC_PI_2 - 0.3,
-                0.4,
-                0.0,
-            )),
+    commands.spawn((DirectionalLightBundle {
+        directional_light: DirectionalLight {
+            shadows_enabled: true,
+            illuminance: 10000.0,
             ..default()
         },
-        Light,
-    ));
+        transform: Transform::from_rotation(Quat::from_euler(
+            EulerRot::XYZ,
+            -FRAC_PI_2 - 0.3,
+            0.4,
+            0.0,
+        )),
+        ..default()
+    },));
 }
