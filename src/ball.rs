@@ -2,7 +2,7 @@ use crate::motion::{Acceleration, MotionBundle};
 use bevy::prelude::*;
 use bevy_third_person_camera::ThirdPersonCameraTarget;
 
-const MASS: f32 = 1.0;
+const ACCELERATION: f32 = 2.0;
 
 pub struct BallPlugin;
 
@@ -45,25 +45,25 @@ fn keyboard_motion(
     let acceleration = &mut query.single_mut();
 
     if input.all_pressed([KeyW, KeyD]) {
-        acceleration.z = -1.0 / (MASS * 2.0f32.sqrt());
-        acceleration.x = 1.0 / (MASS * 2.0f32.sqrt());
+        acceleration.z = -ACCELERATION / 2.0f32.sqrt();
+        acceleration.x = ACCELERATION / 2.0f32.sqrt();
     } else if input.all_pressed([KeyW, KeyA]) {
-        acceleration.z = -1.0 / (MASS * 2.0f32.sqrt());
-        acceleration.x = -1.0 / (MASS * 2.0f32.sqrt());
+        acceleration.z = -ACCELERATION / 2.0f32.sqrt();
+        acceleration.x = -ACCELERATION / 2.0f32.sqrt();
     } else if input.all_pressed([KeyS, KeyD]) {
-        acceleration.z = 1.0 / (MASS * 2.0f32.sqrt());
-        acceleration.x = 1.0 / (MASS * 2.0f32.sqrt());
+        acceleration.z = ACCELERATION / 2.0f32.sqrt();
+        acceleration.x = ACCELERATION / 2.0f32.sqrt();
     } else if input.all_pressed([KeyS, KeyA]) {
-        acceleration.z = 1.0 / (MASS * 2.0f32.sqrt());
-        acceleration.x = -1.0 / (MASS * 2.0f32.sqrt());
+        acceleration.z = ACCELERATION / 2.0f32.sqrt();
+        acceleration.x = -ACCELERATION / 2.0f32.sqrt();
     } else if input.pressed(KeyW) {
-        acceleration.z = -1.0 / MASS;
+        acceleration.z = -ACCELERATION;
     } else if input.pressed(KeyS) {
-        acceleration.z = 1.0 / MASS;
+        acceleration.z = ACCELERATION;
     } else if input.pressed(KeyD) {
-        acceleration.x = 1.0 / MASS;
+        acceleration.x = ACCELERATION;
     } else if input.pressed(KeyA) {
-        acceleration.x = -1.0 / MASS;
+        acceleration.x = -ACCELERATION;
     }
 
     if input.any_just_released([KeyW, KeyS]) {
