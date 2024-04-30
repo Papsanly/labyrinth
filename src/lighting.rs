@@ -1,4 +1,5 @@
-use bevy::{pbr::PointLightShadowMap, prelude::*};
+use bevy::{pbr::DirectionalLightShadowMap, prelude::*};
+use std::f32::consts::FRAC_PI_2;
 
 pub struct LightingPlugin;
 
@@ -7,20 +8,25 @@ pub struct Light;
 
 impl Plugin for LightingPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(PointLightShadowMap { size: 4096 })
+        app.insert_resource(DirectionalLightShadowMap { size: 4096 })
             .add_systems(Startup, spawn);
     }
 }
 
 fn spawn(mut commands: Commands) {
     commands.spawn((
-        PointLightBundle {
-            point_light: PointLight {
+        DirectionalLightBundle {
+            directional_light: DirectionalLight {
                 shadows_enabled: true,
-                intensity: 5_000_000.0,
+                illuminance: 10000.0,
                 ..default()
             },
-            transform: Transform::from_xyz(3.0, 3.0, 0.0).looking_at(Vec3::ZERO, Vec3::Y),
+            transform: Transform::from_rotation(Quat::from_euler(
+                EulerRot::XYZ,
+                -FRAC_PI_2 - 0.3,
+                0.4,
+                0.0,
+            )),
             ..default()
         },
         Light,
