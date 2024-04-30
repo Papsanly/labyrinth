@@ -9,7 +9,6 @@ use bevy_third_person_camera::ThirdPersonCameraPlugin;
 
 fn main() {
     App::new()
-        .insert_resource(ClearColor(Color::hex("#9bc4eb").unwrap()))
         .add_plugins(DefaultPlugins)
         .add_plugins(motion::MotionPlugin)
         .add_plugins(ball::BallPlugin)

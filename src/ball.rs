@@ -19,7 +19,7 @@ fn spawn(
 ) {
     commands.spawn((
         PbrBundle {
-            mesh: meshes.add(Sphere::default().mesh().ico(8).unwrap()),
+            mesh: meshes.add(Sphere::default().mesh().ico(12).unwrap()),
             material: materials.add(StandardMaterial {
                 base_color: Color::hex("#ff5471").unwrap(),
                 ..default()
