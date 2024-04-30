@@ -1,5 +1,6 @@
 use crate::motion::{Acceleration, MotionBundle};
 use bevy::prelude::*;
+use bevy_third_person_camera::ThirdPersonCameraTarget;
 
 const MASS: f32 = 1.0;
 
@@ -29,6 +30,7 @@ fn spawn(
             transform: Transform::from_xyz(0.0, 0.5, 0.0),
             ..default()
         },
+        ThirdPersonCameraTarget,
         MotionBundle::default(),
         Ball,
     ));
