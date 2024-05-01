@@ -17,7 +17,7 @@ impl Plugin for LightingPlugin {
 }
 
 fn spawn(mut commands: Commands) {
-    commands.spawn((DirectionalLightBundle {
+    commands.spawn(DirectionalLightBundle {
         directional_light: DirectionalLight {
             shadows_enabled: true,
             illuminance: 10000.0,
@@ -30,5 +30,5 @@ fn spawn(mut commands: Commands) {
             0.0,
         )),
         ..default()
-    },));
+    });
 }
