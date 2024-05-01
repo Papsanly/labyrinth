@@ -6,6 +6,7 @@ pub struct BallPlugin;
 
 #[derive(Component)]
 pub struct Ball;
+
 impl Plugin for BallPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn);
