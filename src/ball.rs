@@ -1,4 +1,4 @@
-use crate::motion::{KeyboardMotion, MotionBundle};
+use crate::motion::{KeyboardMotion, MotionBody};
 use bevy::prelude::*;
 use bevy_third_person_camera::ThirdPersonCameraTarget;
 
@@ -28,8 +28,8 @@ fn spawn(
             ..default()
         },
         ThirdPersonCameraTarget,
-        MotionBundle::default(),
-        KeyboardMotion,
+        MotionBody::default(),
+        KeyboardMotion::default(),
         Ball,
     ));
 }

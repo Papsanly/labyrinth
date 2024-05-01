@@ -1,39 +1,36 @@
 use bevy::prelude::*;
 use std::f32::consts::{FRAC_PI_2, SQRT_2};
 
-#[derive(Component, Debug, Deref, DerefMut)]
-pub struct Mass(pub f32);
+#[derive(Component, Debug)]
+pub struct MotionBody {
+    pub velocity: Vec3,
+    pub force: Vec3,
+    pub mass: f32,
+}
 
-impl Default for Mass {
+impl Default for MotionBody {
     fn default() -> Self {
-        Self(1.0)
+        Self {
+            mass: 1.0,
+            velocity: Vec3::ZERO,
+            force: Vec3::ZERO,
+        }
     }
 }
 
-#[derive(Component, Debug, Deref, DerefMut)]
-pub struct Friction(pub f32);
-
-impl Default for Friction {
-    fn default() -> Self {
-        Self(1.0)
-    }
+#[derive(Component, Debug)]
+pub struct KeyboardMotion {
+    pub force_magnitude: f32,
+    pub friction: f32,
 }
 
-#[derive(Component, Default, Debug, Deref, DerefMut)]
-pub struct Velocity(pub Vec3);
-
-#[derive(Component, Default, Debug, Deref, DerefMut)]
-pub struct Force(pub Vec3);
-
-#[derive(Component)]
-pub struct KeyboardMotion;
-
-#[derive(Bundle, Default)]
-pub struct MotionBundle {
-    velocity: Velocity,
-    force: Force,
-    mass: Mass,
-    friction: Friction,
+impl Default for KeyboardMotion {
+    fn default() -> Self {
+        Self {
+            force_magnitude: 1.0,
+            friction: 1.0,
+        }
+    }
 }
 
 pub struct MotionPlugin;
@@ -44,26 +41,29 @@ impl Plugin for MotionPlugin {
     }
 }
 
-fn update_motion(
-    mut query: Query<(&mut Transform, &mut Velocity, &Force, &Mass, &Friction)>,
-    time: Res<Time>,
-) {
-    for (mut transform, mut velocity, force, mass, friction) in &mut query {
+fn update_motion(mut query: Query<(&mut Transform, &mut MotionBody)>, time: Res<Time>) {
+    for (mut transform, mut body) in &mut query {
         let dt = time.delta_seconds();
-        let v = **velocity;
-        **velocity += (**force - **friction * v) / **mass * dt;
-        transform.translation += v * dt;
+        body.velocity = body.velocity + body.force / body.mass * dt;
+        transform.translation += body.velocity * dt;
     }
 }
 
 fn keyboard_motion(
-    mut force_query: Query<&mut Force, With<KeyboardMotion>>,
+    mut motion_query: Query<(&mut MotionBody, &KeyboardMotion)>,
     camera_transform_query: Query<&Transform, With<Camera3d>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
     use KeyCode::{KeyA, KeyD, KeyS, KeyW};
 
-    let mut force = force_query.single_mut();
+    let (
+        mut body,
+        &KeyboardMotion {
+            force_magnitude,
+            friction,
+        },
+    ) = motion_query.single_mut();
+
     let &Transform {
         rotation: camera_rotation,
         ..
@@ -72,32 +72,35 @@ fn keyboard_motion(
     let camera_direction = camera_rotation * Vec3::NEG_Z;
     let forward = Vec3::new(camera_direction.x, 0.0, camera_direction.z).normalize();
     let right = Quat::from_rotation_y(-FRAC_PI_2) * forward;
+    let mut force = Vec3::ZERO;
 
     if input.all_pressed([KeyW, KeyD]) {
-        **force = (forward + right) / SQRT_2;
+        force = (forward + right) / SQRT_2;
     } else if input.all_pressed([KeyW, KeyA]) {
-        **force = (forward - right) / SQRT_2;
+        force = (forward - right) / SQRT_2;
     } else if input.all_pressed([KeyS, KeyD]) {
-        **force = (-forward + right) / SQRT_2;
+        force = (-forward + right) / SQRT_2;
     } else if input.all_pressed([KeyS, KeyA]) {
-        **force = (-forward - right) / SQRT_2;
+        force = (-forward - right) / SQRT_2;
     } else if input.pressed(KeyW) {
-        **force = forward;
+        force = forward;
     } else if input.pressed(KeyS) {
-        **force = -forward;
+        force = -forward;
     } else if input.pressed(KeyD) {
-        **force = right;
+        force = right;
     } else if input.pressed(KeyA) {
-        **force = -right;
+        force = -right;
     }
 
     if input.just_released(KeyW) {
-        **force -= forward;
+        force -= forward;
     } else if input.just_released(KeyS) {
-        **force += forward;
+        force += forward;
     } else if input.just_released(KeyD) {
-        **force -= right;
+        force -= right;
     } else if input.just_released(KeyA) {
-        **force += right;
+        force += right;
     }
+
+    body.force = force * force_magnitude - friction * body.velocity;
 }
