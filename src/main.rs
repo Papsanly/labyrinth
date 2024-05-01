@@ -5,7 +5,6 @@ mod lighting;
 mod motion;
 
 use bevy::prelude::*;
-use bevy_third_person_camera::ThirdPersonCameraPlugin;
 
 fn main() {
     App::new()
@@ -14,7 +13,7 @@ fn main() {
         .add_plugins(ball::BallPlugin)
         .add_plugins(labyrinth::LabyrinthPlugin)
         .add_plugins(camera::CameraPlugin)
-        .add_plugins(ThirdPersonCameraPlugin)
+        .add_plugins(bevy_third_person_camera::ThirdPersonCameraPlugin)
         .add_plugins(lighting::LightingPlugin)
         .run();
 }
