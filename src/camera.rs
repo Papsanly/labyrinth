@@ -60,7 +60,8 @@ fn orbit_camera(
 
         let new_rotation = transform.rotation * pitch;
         let up_vector = new_rotation * Vec3::Y;
-        if up_vector.y > 0.0 {
+        let camera_vector = new_rotation * Vec3::NEG_Z;
+        if up_vector.y > 0.0 && camera_vector.y < 0.0 {
             transform.rotation = new_rotation;
         }
 
