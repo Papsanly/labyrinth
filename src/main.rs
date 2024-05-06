@@ -8,12 +8,13 @@ use bevy::prelude::*;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
-        .add_plugins(motion::MotionPlugin)
-        .add_plugins(ball::BallPlugin)
-        .add_plugins(labyrinth::LabyrinthPlugin)
-        .add_plugins(camera::CameraPlugin)
-        .add_plugins(bevy_third_person_camera::ThirdPersonCameraPlugin)
-        .add_plugins(lighting::LightingPlugin)
+        .add_plugins((
+            DefaultPlugins,
+            motion::MotionPlugin,
+            ball::BallPlugin,
+            labyrinth::LabyrinthPlugin,
+            camera::CameraPlugin,
+            lighting::LightingPlugin,
+        ))
         .run();
 }

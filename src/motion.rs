@@ -1,5 +1,5 @@
+use crate::camera::OrbitCamera;
 use bevy::prelude::*;
-use bevy_third_person_camera::ThirdPersonCamera;
 use std::f32::consts::{FRAC_PI_2, SQRT_2};
 
 #[derive(Component, Debug)]
@@ -52,7 +52,7 @@ fn update_motion(mut query: Query<(&mut Transform, &mut MotionBody)>, time: Res<
 
 fn keyboard_motion(
     mut motion_query: Query<(&mut MotionBody, &KeyboardMotion)>,
-    camera_transform_query: Query<&Transform, With<ThirdPersonCamera>>,
+    camera_transform_query: Query<&Transform, With<OrbitCamera>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
     use KeyCode::{KeyA, KeyD, KeyS, KeyW};

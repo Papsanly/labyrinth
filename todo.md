@@ -18,9 +18,9 @@ Systems:
 
 Systems:
 
-- [ ] follow Ball
-- [ ] not clip into walls
-- [ ] pan around ball
+- [x] follow Ball
+- [ ] not clip into walls and floor
+- [x] orbit around ball
 
 # Toon Shader Plugin
 
@@ -28,7 +28,6 @@ Systems:
 
 # Game States
 
-- StartMenu
 - StartMenu
 - InGame
 - Records

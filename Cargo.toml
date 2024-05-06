@@ -5,4 +5,3 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.13.2"
-bevy_third_person_camera = "0.1.10"

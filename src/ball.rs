@@ -1,6 +1,8 @@
-use crate::motion::{KeyboardMotion, MotionBody};
+use crate::{
+    camera::OrbitCameraTarget,
+    motion::{KeyboardMotion, MotionBody},
+};
 use bevy::prelude::*;
-use bevy_third_person_camera::ThirdPersonCameraTarget;
 
 pub struct BallPlugin;
 
@@ -28,7 +30,7 @@ fn spawn(
             transform: Transform::from_xyz(0.0, 0.5, 0.0),
             ..default()
         },
-        ThirdPersonCameraTarget,
+        OrbitCameraTarget,
         MotionBody::default(),
         KeyboardMotion::default(),
         Ball,
